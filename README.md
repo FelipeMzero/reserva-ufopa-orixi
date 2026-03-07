@@ -91,7 +91,7 @@ I --> J
 ### 1️⃣ Clonar repositório
 
 ```bash
-git clone https://github.com/FelipeMzero/reservas-ufopa.git
+git clone https://github.com/FelipeMzero/reserva-ufopa-orixi.git
 ```
 
 ### 2️⃣ Instalar dependências
