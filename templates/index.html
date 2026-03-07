@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Reservas UFOPA - Oriximiná</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="https://sigaa.ufopa.edu.br/sigaa/img/sigaa.ico">
+
+    <style>
+        /* CSS Específico para os Novos Status */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        /* Azul: Reservas futuras */
+        .agendada {
+            background-color: #ebf5ff;
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
+        /* Verde com Pulso: Acontecendo agora */
+        .executando {
+            background-color: #e8f5e9;
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            animation: pulse-active 2s infinite;
+        }
+
+        /* Cinza: Já finalizadas hoje */
+        .realizada {
+            background-color: #f1f2f6;
+            color: #636e72;
+            border: 1px solid #dfe6e9;
+            opacity: 0.7;
+        }
+
+        @keyframes pulse-active {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .user-cell {
+            font-weight: 700;
+            color: #003366;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <img src="https://www.ufopa.edu.br/ppge/images/ppge/imagens/Ufopa_braso_PNG_fundo_transparente.png"
+                    alt="Logo UFOPA" width="40">
+                <span>Reservas UFOPA</span>
+            </div>
+            <div class="user-info">
+                <span>Professor: <strong>{{ nome }}</strong></span>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="card-form">
+            <h2><i class="icon">📝</i> Nova Reserva de Aula</h2>
+            <form action="{{ url_for('reservar') }}" method="POST" id="formReserva">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="aula">Nome da Aula/Disciplina:</label>
+                        <input type="text" name="aula" id="aula" placeholder="Ex: Redes de Computadores" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="sala">Local:</label>
+                        <select name="sala" id="sala" required>
+                            <option value="Laboratório de Informática" selected>Laboratório de Informática</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="data">Data:</label>
+                        <input type="date" name="data" id="data" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="hora_inicio">Hora Início:</label>
+                        <input type="time" name="hora_inicio" id="hora_inicio" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="hora_fim">Hora Fim:</label>
+                        <input type="time" name="hora_fim" id="hora_fim" required>
+                    </div>
+
+                    <div class="btn-area">
+                        <button type="submit" class="btn-confirmar">Confirmar Reserva</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="card-table">
+            <h2><i class="icon">📅</i> Quadro de Ocupação Atual</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Professor</th>
+                            <th>Aula/Disciplina</th>
+                            <th>Data</th>
+                            <th>Horário</th>
+                            <th>Status</th>
+                            <th style="text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if reservas %}
+                        {% for res in reservas %}
+                        <tr>
+                            <td class="user-cell" data-label="Professor">{{ res.usuario }}</td>
+                            <td data-label="Aula">{{ res.aula }}</td>
+                            <td data-label="Data">{{ res.data }}</td>
+                            <td data-label="Horário"><strong>{{ res.hora_inicio }}</strong> às <strong>{{ res.hora_fim
+                                    }}</strong></td>
+                            <td data-label="Status">
+                                <span class="status-badge {{ res.status | lower }}">
+                                    {{ res.status }}
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                {% if res.usuario == nome %}
+                                <div class="acoes-buttons" style="display: flex; gap: 5px; justify-content: center;">
+                                    <a href="{{ url_for('editar', index=loop.index0) }}" class="btn-edit">Editar</a>
+                                    <a href="{{ url_for('excluir', index=loop.index0) }}" class="btn-delete"
+                                        onclick="return confirm('Deseja excluir esta reserva?')">Excluir</a>
+                                </div>
+                                {% else %}
+                                <span class="status-readonly">Privado</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
+                                Nenhuma reserva ativa ou agendada para os próximos dias.
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="info-footer">
+        <p>Sistema de Reservas UFOPA - Desenvolvido para o Campus Oriximiná</p>
+        <p>Feito por Felipe Monteiro</p>
+        <p>Status Atual: Em Fase de Implementação</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

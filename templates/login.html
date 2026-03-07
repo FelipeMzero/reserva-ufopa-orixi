@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso SIGAA - Reserva UFOPA</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
+    <link rel="shortcut icon" href="https://sigaa.ufopa.edu.br/sigaa/img/sigaa.ico">
+</head>
+
+<body>
+
+    <div class="login-container">
+        <div class="header-login">
+            <img src="https://www.ufopa.edu.br/ppge/images/ppge/imagens/Ufopa_braso_PNG_fundo_transparente.png"
+                alt="Brasão UFOPA" class="logo">
+            <h1>Sistema de Reservas</h1>
+            <p>Entre com seu usuário e senha do <strong>SIGAA</strong></p>
+        </div>
+
+        <div class="alert-aviso">
+            <p>⚠️ <strong>Atenção:</strong> O sistema diferencia maiúsculas de minúsculas apenas na senha.</p>
+        </div>
+
+        <form action="{{ url_for('auth') }}" method="POST" id="formLogin">
+            <div class="input-group">
+                <label for="user">Usuário</label>
+                <input type="text" id="user" name="user" placeholder="Ex: Nome.Sobrenome" required
+                    autocomplete="username" autofocus>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" placeholder="Sua senha do SIGAA" required
+                    autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn-login" id="btnEntrar">ENTRAR NO SISTEMA</button>
+        </form>
+
+
+        <footer class="info-footer">
+            <p>Sistema de Reservas UFOPA - Desenvolvido para o Campus Oriximiná</p>
+            <p>Feito por Felipe Monteiro</p>
+            <p>Status Atual: Em Fase de Implementação</p>
+            </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+
+</html>

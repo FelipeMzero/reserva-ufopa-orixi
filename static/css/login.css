@@ -1,0 +1,275 @@
+/* Identidade Visual UFOPA - Campus Oriximiná */
+:root {
+    --ufopa-verde: #008542;
+    --ufopa-verde-escuro: #006b35;
+    --ufopa-azul: #003366;
+    --ufopa-azul-gradiente: linear-gradient(135deg, #003366 0%, #001a33 100%);
+    --fundo: #f8f9fa;
+    --branco: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.15);
+    --borda: #dee2e6;
+}
+
+* {
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    background: var(--ufopa-azul-gradiente); /* Fundo em gradiente azul UFOPA */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Container Principal do Login */
+.login-container {
+    background-color: var(--branco);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 420px;
+    border-top: 8px solid var(--ufopa-verde);
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo e Títulos */
+.logo {
+    width: 160px; /* Tamanho ajustado para a logo horizontal/circular */
+    height: auto;
+    margin-bottom: 25px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.header-login h1 {
+    color: var(--ufopa-azul);
+    font-size: 1.4rem;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.header-login p {
+    color: #636e72;
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+}
+
+/* Alerta de Maiúsculas/Minúsculas */
+.alert-aviso {
+    background-color: #fff8e1;
+    color: #856404;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ffe082;
+    margin-bottom: 25px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Grupos de Input */
+.input-group {
+    text-align: left;
+    margin-bottom: 22px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: var(--ufopa-azul);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--borda);
+    border-radius: 10px;
+    font-size: 1rem;
+    background-color: #fcfcfc;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--ufopa-verde);
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(0, 133, 66, 0.1);
+}
+
+/* Botão de Login */
+.btn-login {
+    width: 100%;
+    padding: 16px;
+    background-color: var(--ufopa-verde);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 133, 66, 0.3);
+    margin-top: 10px;
+}
+
+.btn-login:hover {
+    background-color: var(--ufopa-verde-escuro);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 133, 66, 0.4);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+/* Rodapé do Login */
+.footer-info {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--borda);
+    font-size: 0.75rem;
+    color: #95a5a6;
+}
+
+/* Ajustes para Redmi Note 13 e similares */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 30px 20px;
+    }
+    
+    .header-login h1 {
+        font-size: 1.2rem;
+    }
+}
+/* --- CONTAINER PRINCIPAL DO LOGIN (Compactado) --- */
+.login-container {
+    background-color: var(--branco);
+    /* Reduzi drasticamente o padding vertical de 40px para 20px */
+    padding: 20px 30px; 
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 360px; /* Mantive a largura menor que ajustamos antes */
+    border-top: 8px solid var(--ufopa-verde);
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* --- LOGO E TÍTULOS (Compactados) --- */
+.logo {
+    /* Você já diminuiu, mas garanta que esteja equilibrado */
+    width: 110px; 
+    height: auto;
+    /* Reduzi a margem inferior de 25px para 10px */
+    margin-bottom: 10px; 
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.header-login h1 {
+    color: var(--ufopa-azul);
+    font-size: 1.2rem;
+    /* Reduzi a margem inferior de 8px para 2px */
+    margin: 0 0 2px 0; 
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.header-login p {
+    color: #636e72;
+    font-size: 0.85rem;
+    /* Reduzi a margem inferior de 30px para 15px */
+    margin-bottom: 15px; 
+}
+
+/* --- ALERTA DE MAIÚSCULAS/MINÚSCULAS (Mais fino) --- */
+.alert-aviso {
+    background-color: #fff8e1;
+    color: #856404;
+    /* Reduzi o padding interno para ficar mais fino */
+    padding: 8px 12px; 
+    border-radius: 8px;
+    border: 1px solid #ffe082;
+    /* Reduzi a margem inferior de 25px para 15px */
+    margin-bottom: 15px; 
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* --- GRUPOS DE INPUT (Mais próximos) --- */
+.input-group {
+    text-align: left;
+    /* Reduzi a margem inferior entre os campos de 22px para 12px */
+    margin-bottom: 12px; 
+}
+
+.input-group label {
+    display: block;
+    /* Reduzi a margem entre label e input para 4px */
+    margin-bottom: 4px; 
+    font-weight: 700;
+    color: var(--ufopa-azul);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.input-group input {
+    width: 100%;
+    /* Reduzi o padding interno do input para 10px (altura menor) */
+    padding: 10px 14px; 
+    border: 2px solid var(--borda);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: #fcfcfc;
+}
+
+/* --- BOTÃO DE LOGIN (Mais baixo) --- */
+.btn-login {
+    width: 100%;
+    /* Reduzi o padding vertical do botão para 12px */
+    padding: 12px; 
+    background-color: var(--ufopa-verde);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 133, 66, 0.3);
+    /* Margem superior reduzida */
+    margin-top: 5px; 
+}
+
+/* --- RODAPÉ DO LOGIN (Mais próximo do formulário) --- */
+.footer-info {
+    /* Margem superior reduzida de 30px para 15px */
+    margin-top: 15px; 
+    /* Padding superior reduzido de 20px para 10px */
+    padding-top: 10px; 
+    border-top: 1px solid var(--borda);
+    font-size: 0.7rem;
+    color: #95a5a6;
+}

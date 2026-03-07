@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Reserva - UFOPA</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="https://sigaa.ufopa.edu.br/sigaa/img/sigaa.ico">
+
+    <style>
+        /* Estilo específico para a página de edição */
+        .card-edit {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-top: 6px solid var(--ufopa-ouro);
+            /* Cor de destaque para edição */
+        }
+
+        .btn-cancelar {
+            background-color: #f1f2f6;
+            color: #636e72;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-cancelar:hover {
+            background-color: #dfe6e9;
+        }
+
+        .edit-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f4f7f9;
+            padding-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <img src="https://www.ufopa.edu.br/ppge/images/ppge/imagens/Ufopa_braso_PNG_fundo_transparente.png"
+                    alt="Logo UFOPA" width="40">
+                <span>Reservas UFOPA</span>
+            </div>
+            <div class="user-info">
+                <span>Professor: <strong>{{ nome }}</strong></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="card-edit">
+            <div class="edit-header">
+                <span style="font-size: 2rem;">✏️</span>
+                <div>
+                    <h2 style="margin:0; border:none; padding:0;">Alterar Reserva</h2>
+                    <p style="color: #636e72; margin:0; font-size: 0.9rem;">Modifique os detalhes da aula abaixo.</p>
+                </div>
+            </div>
+
+            <form action="{{ url_for('editar', index=index) }}" method="POST">
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <label for="aula">Nome da Aula/Disciplina:</label>
+                    <input type="text" name="aula" id="aula" value="{{ reserva.aula }}" required>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <label for="sala">Local:</label>
+                    <select name="sala" id="sala" required>
+                        <option value="Laboratório de Informática" {% if reserva.sala=='Laboratório de Informática'
+                            %}selected{% endif %}>
+                            Laboratório de Informática
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-row" style="grid-template-columns: 1fr 1fr; margin-bottom: 20px;">
+                    <div class="input-group">
+                        <label for="data">Data:</label>
+                        <input type="date" name="data" id="data" value="{{ reserva.data }}" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Status Atual:</label>
+                        <div style="padding: 10px 0;">
+                            <span class="status-badge {{ reserva.status | lower }}">
+                                {{ reserva.status }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="grid-template-columns: 1fr 1fr; margin-bottom: 30px;">
+                    <div class="input-group">
+                        <label for="hora_inicio">Hora Início:</label>
+                        <input type="time" name="hora_inicio" id="hora_inicio" value="{{ reserva.hora_inicio }}"
+                            required>
+                    </div>
+                    <div class="input-group">
+                        <label for="hora_fim">Hora Fim:</label>
+                        <input type="time" name="hora_fim" id="hora_fim" value="{{ reserva.hora_fim }}" required>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: flex-end; align-items: center; border-top: 1px solid #eee; padding-top: 20px;">
+                    <a href="{{ url_for('dashboard') }}" class="btn-cancelar">Voltar ao Painel</a>
+                    <button type="submit" class="btn-confirmar">Salvar Alterações</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="info-footer">
+        <p>Feito por Felipe Monteiro</p>
+        <p>Status Atual: Em Fase de Implementação</p>
+
+    </footer>
+
+</body>
+
+</html>
