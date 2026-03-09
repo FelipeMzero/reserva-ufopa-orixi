@@ -1,1 +1,8 @@
-usuario,sala,aula,data,hora_inicio,hora_fim
+id,usuario,sala,aula,data,hora_inicio,hora_fim
+a927e4df-2ce4-40da-a1b9-9b97e3a203bc,Felipe Picanco,Sala 02,Redes,2026-07-10,08:00,22:00
+63ec5768-1c9f-4216-90f3-f3d519ebbdb0,Felipe Picanco,Sala 02,Redes,2026-03-11,08:00,22:00
+19f21312-6272-4b01-b51c-19ed601c0783,Felipe Picanco,Sala 02,Redes,2026-03-12,08:00,22:00
+5fa56c3d-fd63-47dd-b63e-246cd53b88a8,Felipe Picanco,Sala 02,Redes,2026-03-13,08:00,22:00
+5415f2db-1e35-4321-8f10-d625958b9f05,Felipe Picanco,Sala 02,Redes,2026-03-14,08:00,22:00
+86599bcd-a7fe-459a-801f-9d31ca06a117,Felipe Picanco,Sala 02,Redes,2026-03-15,08:00,22:00
+37293f8d-ef45-4b27-86c0-a7f5a1775fc9,Felipe Picanco,Lab. de Informática,Redes,2026-03-09,08:00,22:00
