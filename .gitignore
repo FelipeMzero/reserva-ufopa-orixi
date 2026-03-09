@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Ambiente virtual
+venv/
+.env/
+env/
+.venv/
+
+# Flask / sessões
+instance/
+.flaskenv
+
+# Dados sensíveis
+reservas.csv
+*.secret
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
