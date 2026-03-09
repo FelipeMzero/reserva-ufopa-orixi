@@ -1,55 +1,75 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acesso SIGAA - Reserva UFOPA</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-
-    <link rel="shortcut icon" href="https://sigaa.ufopa.edu.br/sigaa/img/sigaa.ico">
+    <title>Login — Reservas UFOPA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo.png') }}">
 </head>
+<body class="login-page">
 
-<body>
-
-    <div class="login-container">
-        <div class="header-login">
-            <img src="https://www.ufopa.edu.br/ppge/images/ppge/imagens/Ufopa_braso_PNG_fundo_transparente.png"
-                alt="Brasão UFOPA" class="logo">
-            <h1>Sistema de Reservas</h1>
-            <p>Entre com seu usuário e senha do <strong>SIGAA</strong></p>
+    <div class="login-card">
+        <div class="login-logo">
+            <img
+                src="{{ url_for('static', filename='img/logo.png') }}"
+                alt="Brasão UFOPA"
+                onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+            <!-- Fallback SVG — aparece se a imagem não carregar -->
+            <div id="logo-fallback" style="display:none; width:80px; height:80px; border-radius:50%;
+                 background:linear-gradient(135deg,#0a2d6e,#1145a0); align-items:center;
+                 justify-content:center; box-shadow:0 6px 20px rgba(10,45,110,.28);">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"
+                          fill="rgba(255,255,255,0.9)"/>
+                    <path d="M12 6l-5 2.75V12c0 3.15 2.25 6.1 5 6.82 2.75-.72 5-3.67 5-6.82V8.75L12 6z"
+                          fill="#0a2d6e"/>
+                    <text x="12" y="14" text-anchor="middle" font-size="5" font-weight="bold"
+                          fill="rgba(255,255,255,0.9)" font-family="serif">U</text>
+                </svg>
+            </div>
         </div>
 
-        <div class="alert-aviso">
-            <p>⚠️ <strong>Atenção:</strong> O sistema diferencia maiúsculas de minúsculas apenas na senha.</p>
-        </div>
+        <h1 class="login-title">Reservas UFOPA</h1>
+        <p class="login-subtitle">Campus Oriximiná — Acesso Institucional</p>
 
-        <form action="{{ url_for('auth') }}" method="POST" id="formLogin">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash flash-{{ category }}" style="text-align:left; margin-bottom:16px;">
+                    <span class="flash-icon">{% if category == 'sucesso' %}✅{% else %}⚠️{% endif %}</span>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('auth') }}" method="POST" autocomplete="on">
             <div class="input-group">
-                <label for="user">Usuário</label>
-                <input type="text" id="user" name="user" placeholder="Ex: Nome.Sobrenome" required
-                    autocomplete="username" autofocus>
+                <label for="user">Usuário SIGAA</label>
+                <input type="text" name="user" id="user"
+                       placeholder="nome.sobrenome"
+                       autocomplete="username"
+                       required autofocus>
             </div>
 
             <div class="input-group">
                 <label for="password">Senha</label>
-                <input type="password" id="password" name="password" placeholder="Sua senha do SIGAA" required
-                    autocomplete="current-password">
+                <input type="password" name="password" id="password"
+                       placeholder="••••••••"
+                       autocomplete="current-password"
+                       required>
             </div>
 
-            <button type="submit" class="btn-login" id="btnEntrar">ENTRAR NO SISTEMA</button>
+            <button type="submit" class="btn-confirmar">Entrar no Sistema</button>
         </form>
 
-
-        <footer class="info-footer">
-            <p>Sistema de Reservas UFOPA - Desenvolvido para o Campus Oriximiná</p>
-            <p>Feito por Felipe Monteiro</p>
-            <p>Status Atual: Em Fase de Implementação</p>
-            </div>
+        <hr class="login-divider">
+        <p class="login-nota">
+            Use as mesmas credenciais do <strong>Portal SIGAA da UFOPA</strong>.<br>
+            O sistema não armazena sua senha.
+        </p>
     </div>
 
-    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </body>
-
 </html>

@@ -4,64 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Reservas UFOPA - Oriximiná</title>
-
+    <title>Painel de Reservas — UFOPA Oriximiná</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="shortcut icon" href="https://sigaa.ufopa.edu.br/sigaa/img/sigaa.ico">
-
-    <style>
-        /* CSS Específico para os Novos Status */
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            display: inline-block;
-        }
-
-        /* Azul: Reservas futuras */
-        .agendada {
-            background-color: #ebf5ff;
-            color: #3498db;
-            border: 1px solid rgba(52, 152, 219, 0.3);
-        }
-
-        /* Verde com Pulso: Acontecendo agora */
-        .executando {
-            background-color: #e8f5e9;
-            color: #2ecc71;
-            border: 1px solid rgba(46, 204, 113, 0.3);
-            animation: pulse-active 2s infinite;
-        }
-
-        /* Cinza: Já finalizadas hoje */
-        .realizada {
-            background-color: #f1f2f6;
-            color: #636e72;
-            border: 1px solid #dfe6e9;
-            opacity: 0.7;
-        }
-
-        @keyframes pulse-active {
-            0% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.6;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .user-cell {
-            font-weight: 700;
-            color: #003366;
-        }
-    </style>
 </head>
 
 <body>
@@ -69,36 +14,75 @@
     <header class="main-header">
         <div class="header-container">
             <div class="logo-area">
-                <img src="https://www.ufopa.edu.br/ppge/images/ppge/imagens/Ufopa_braso_PNG_fundo_transparente.png"
-                    alt="Logo UFOPA" width="40">
+                <img src="{{ url_for('static', filename='img/logo.png') }}"
+                    alt="Logo UFOPA" width="40"
+                    onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22 viewBox=%220 0 24 24%22%3E%3Cpath d=%22M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z%22 fill=%22rgba(255,255,255,0.9)%22/%3E%3C/svg%3E'">
                 <span>Reservas UFOPA</span>
             </div>
             <div class="user-info">
-                <span>Professor: <strong>{{ nome }}</strong></span>
+                <span>Olá, <strong>{{ nome }}</strong></span>
                 <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
             </div>
         </div>
     </header>
 
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">
+                <span class="flash-icon">{% if category == 'sucesso' %}✅{% else %}⚠️{% endif %}</span>
+                {{ message }}
+                <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
     <main class="container">
         <section class="card-form">
-            <h2><i class="icon">📝</i> Nova Reserva de Aula</h2>
-            <form action="{{ url_for('reservar') }}" method="POST" id="formReserva">
+            <h2><i class="icon">📝</i> Nova Reserva</h2>
+            <form action="{{ url_for('reservar') }}" method="POST" id="formReserva" novalidate>
                 <div class="form-row">
+
                     <div class="input-group">
-                        <label for="aula">Nome da Aula/Disciplina:</label>
-                        <input type="text" name="aula" id="aula" placeholder="Ex: Redes de Computadores" required>
+                        <label for="aula">Nome da Aula / Atividade:</label>
+                        <input type="text" name="aula" id="aula"
+                            placeholder="Ex: Redes de Computadores ou Palestra" required
+                            maxlength="120">
                     </div>
 
                     <div class="input-group">
-                        <label for="sala">Local:</label>
+                        <label for="sala">Local / Recurso:</label>
                         <select name="sala" id="sala" required>
-                            <option value="Laboratório de Informática" selected>Laboratório de Informática</option>
+                            <option value="" disabled selected>Escolha o local ou veículo…</option>
+                            <optgroup label="Laboratórios">
+                                <option value="Lab. de Informática">Lab. de Informática</option>
+                                <option value="Lab. Multidisciplinar">Lab. Multidisciplinar</option>
+                            </optgroup>
+                            <optgroup label="Salas de Aula">
+                                <option value="Sala 00 Tela Interativa">Sala 00 (Tela Interativa)</option>
+                                <option value="Sala 01">Sala 01</option>
+                                <option value="Sala 02">Sala 02</option>
+                                <option value="Sala 03">Sala 03</option>
+                                <option value="Sala 04">Sala 04</option>
+                            </optgroup>
+                            <optgroup label="Espaços Comuns">
+                                <option value="Auditório">Auditório</option>
+                                <option value="Bosque Qualy Gonçalves">Bosque Qualy Gonçalves</option>
+                                <option value="Quadra de Areia">Quadra de Areia</option>
+                            </optgroup>
+                            <optgroup label="Frota">
+                                <option value="Veículo L200">Veículo L200</option>
+                                <option value="Veículo Van">Veículo Van</option>
+                            </optgroup>
                         </select>
                     </div>
 
                     <div class="input-group">
-                        <label for="data">Data:</label>
+                        <label for="data">Data Inicial:</label>
                         <input type="date" name="data" id="data" required>
                     </div>
 
@@ -112,6 +96,32 @@
                         <input type="time" name="hora_fim" id="hora_fim" required>
                     </div>
 
+                    <div class="input-group checkbox-container">
+                        <input type="checkbox" name="todo_o_dia" id="todo_o_dia">
+                        <label for="todo_o_dia" style="margin:0; cursor:pointer; color:var(--ufopa-azul); font-weight:700;">
+                            Reservar o Dia Todo
+                        </label>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="repeticao_tipo">Repetir Reserva:</label>
+                        <select name="repeticao_tipo" id="repeticao_tipo">
+                            <option value="Nenhum" selected>Não repetir</option>
+                            <option value="diariamente">Diariamente</option>
+                            <option value="semanalmente">Semanalmente</option>
+                            <option value="mensalmente">Mensalmente</option>
+                            <option value="anualmente">Anualmente</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" id="grupoDataFim">
+                        <label for="data_fim_repeticao">Repetir até a Data:</label>
+                        <input type="date" name="data_fim_repeticao" id="data_fim_repeticao">
+                        <small style="color:#636e72; font-size:.75rem; display:block; margin-top:4px;">
+                            Deixe vazio se não for repetir.
+                        </small>
+                    </div>
+
                     <div class="btn-area">
                         <button type="submit" class="btn-confirmar">Confirmar Reserva</button>
                     </div>
@@ -120,66 +130,81 @@
         </section>
 
         <section class="card-table">
-            <h2><i class="icon">📅</i> Quadro de Ocupação Atual</h2>
+            <div class="header-tabela">
+                <h2><i class="icon">📅</i> Quadro de Ocupação</h2>
+                <div class="filtro-mes">
+                    <label for="filtroMes">Filtrar por Mês:</label>
+                    <input type="month" id="filtroMes">
+                    <button id="btnLimparFiltro" class="btn-limpar" title="Ver todos os meses">✕ Limpar</button>
+                </div>
+            </div>
+
             <div class="table-responsive">
-                <table>
+                <table id="tabelaReservas">
                     <thead>
                         <tr>
-                            <th>Professor</th>
-                            <th>Aula/Disciplina</th>
+                            <th>Responsável</th>
+                            <th>Atividade</th>
+                            <th>Local / Recurso</th>
                             <th>Data</th>
                             <th>Horário</th>
                             <th>Status</th>
-                            <th style="text-align: center;">Ações</th>
+                            <th style="text-align:center;">Ações</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="corpoTabela">
                         {% if reservas %}
-                        {% for res in reservas %}
-                        <tr>
-                            <td class="user-cell" data-label="Professor">{{ res.usuario }}</td>
-                            <td data-label="Aula">{{ res.aula }}</td>
-                            <td data-label="Data">{{ res.data }}</td>
-                            <td data-label="Horário"><strong>{{ res.hora_inicio }}</strong> às <strong>{{ res.hora_fim
-                                    }}</strong></td>
-                            <td data-label="Status">
-                                <span class="status-badge {{ res.status | lower }}">
-                                    {{ res.status }}
-                                </span>
-                            </td>
-                            <td style="text-align: center;">
-                                {% if res.usuario == nome %}
-                                <div class="acoes-buttons" style="display: flex; gap: 5px; justify-content: center;">
-                                    <a href="{{ url_for('editar', index=loop.index0) }}" class="btn-edit">Editar</a>
-                                    <a href="{{ url_for('excluir', index=loop.index0) }}" class="btn-delete"
-                                        onclick="return confirm('Deseja excluir esta reserva?')">Excluir</a>
-                                </div>
-                                {% else %}
-                                <span class="status-readonly">Privado</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        {% else %}
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
-                                Nenhuma reserva ativa ou agendada para os próximos dias.
-                            </td>
-                        </tr>
+                            {% for res in reservas %}
+                            <tr class="linha-reserva" data-mes="{{ res.data[:7] }}" data-status="{{ res.status | lower }}">
+                                <td class="user-cell" data-label="Responsável">{{ res.usuario }}</td>
+                                <td data-label="Atividade">{{ res.aula }}</td>
+                                <td data-label="Local/Recurso">
+                                    <span class="badge">{{ res.sala }}</span>
+                                </td>
+                                <td data-label="Data">
+                                    {{ res.data[8:10] }}/{{ res.data[5:7] }}/{{ res.data[0:4] }}
+                                </td>
+                                <td data-label="Horário">
+                                    <strong>{{ res.hora_inicio }}</strong> às <strong>{{ res.hora_fim }}</strong>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="status-badge {{ res.status | lower }}">
+                                        {{ res.status }}
+                                    </span>
+                                </td>
+                                <td style="text-align:center;">
+                                    {% if res.usuario == nome %}
+                                    <div class="acoes-buttons">
+                                        <a href="{{ url_for('editar', res_id=res.id) }}" class="btn-edit">Editar</a>
+                                        <a href="{{ url_for('excluir', res_id=res.id) }}" class="btn-delete"
+                                            onclick="return confirm('Deseja excluir esta reserva?')">Excluir</a>
+                                    </div>
+                                    {% else %}
+                                    <span class="status-readonly">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
                         {% endif %}
+
+                        <tr id="msgVazio" style="display:none;">
+                            <td colspan="7" style="text-align:center; padding:40px; color:#999;">
+                                📭 Nenhuma reserva encontrada para o filtro selecionado.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
+
+            <div class="tabela-resumo" id="tabelaResumo"></div>
         </section>
     </main>
 
     <footer class="info-footer">
-        <p>Sistema de Reservas UFOPA - Desenvolvido para o Campus Oriximiná</p>
-        <p>Feito por Felipe Monteiro</p>
-        <p>Status Atual: Em Fase de Implementação</p>
+        <p>Sistema de Reservas UFOPA — Campus Oriximiná</p>
+        <p>Desenvolvido por Felipe Monteiro</p>
     </footer>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
-
 </html>
