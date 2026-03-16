@@ -185,15 +185,15 @@ Toda vez que o painel é carregado, o servidor classifica cada reserva com base 
 
 ```mermaid
 graph TD
-    A[👨‍🏫 Professor] --> B[🌐 Navegador / Celular]
-    B --> C[🐍 Servidor Flask]
-    C --> D[🔐 Auth SIGAA\nweb scraping]
-    C --> E[📄 reservas.csv\nbanco de dados]
-    C --> F[📊 Dashboard\nstatus em tempo real]
-    D -->|sucesso| G[✅ Sessão criada]
-    D -->|falha|   H[❌ Erro de login]
-    E --> I[🚫 Anti-conflito\nverifica sobreposição]
-    E --> J[🔁 Motor de Repetição\ntimedelta + calendar]
+    A[Professor] --> B[Navegador / Celular]
+    B --> C[Servidor Flask]
+    C --> D[Auth SIGAA\nweb scraping]
+    C --> E[reservas.csv\nbanco de dados]
+    C --> F[Dashboard\nstatus em tempo real]
+    D -->|sucesso| G[Sessão criada]
+    D -->|falha| H[Erro de login]
+    E --> I[Anti-conflito\nverifica sobreposição]
+    E --> J[Motor de Repetição\ntimedelta + calendar]
 ```
 
 <br>
@@ -202,7 +202,7 @@ graph TD
 flowchart TD
     A[Acessar sistema] --> B[Tela de Login]
     B --> C{Credenciais SIGAA\nválidas?}
-    C -->|Não| D[⚠️ Mensagem de erro]
+    C -->|Não| D[Mensagem de erro]
     C -->|Sim| E[Dashboard]
 
     E --> F[Ver reservas do mês]
@@ -217,8 +217,8 @@ flowchart TD
     K -->|Não| M[Data única]
 
     L & M --> N{Conflito\nem alguma data?}
-    N -->|Sim| O[❌ Bloqueia e avisa]
-    N -->|Não| P[✅ Salva no CSV]
+    N -->|Sim| O[Bloqueia e avisa]
+    N -->|Não| P[Salva no CSV]
 
     P --> E
 ```
