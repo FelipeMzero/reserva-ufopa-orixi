@@ -5,38 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — Reservas UFOPA</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo.png') }}">
 </head>
 <body class="login-page">
 
+    <!-- Partículas animadas de fundo -->
+    <div class="particles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- Formas geométricas decorativas -->
+    <div class="geo-shapes" aria-hidden="true">
+        <div class="geo geo-1"></div>
+        <div class="geo geo-2"></div>
+        <div class="geo geo-3"></div>
+        <div class="geo geo-4"></div>
+    </div>
+
     <div class="login-card">
+
+        <!-- Barra de progresso top -->
+        <div class="card-top-bar"></div>
+
         <div class="login-logo">
-            <img
-                src="{{ url_for('static', filename='img/logo.png') }}"
-                alt="Brasão UFOPA"
-                onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
-            <!-- Fallback SVG — aparece se a imagem não carregar -->
-            <div id="logo-fallback" style="display:none; width:80px; height:80px; border-radius:50%;
-                 background:linear-gradient(135deg,#0a2d6e,#1145a0); align-items:center;
-                 justify-content:center; box-shadow:0 6px 20px rgba(10,45,110,.28);">
-                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"
-                          fill="rgba(255,255,255,0.9)"/>
-                    <path d="M12 6l-5 2.75V12c0 3.15 2.25 6.1 5 6.82 2.75-.72 5-3.67 5-6.82V8.75L12 6z"
-                          fill="#0a2d6e"/>
-                    <text x="12" y="14" text-anchor="middle" font-size="5" font-weight="bold"
-                          fill="rgba(255,255,255,0.9)" font-family="serif">U</text>
-                </svg>
+            <div class="logo-ring">
+                <img
+                    src="{{ url_for('static', filename='img/logo.png') }}"
+                    alt="Brasão UFOPA"
+                    id="logoImg"
+                    onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+                <div id="logo-fallback" style="display:none;" class="logo-fallback-icon">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="rgba(255,255,255,0.9)"/>
+                        <path d="M12 6l-5 2.75V12c0 3.15 2.25 6.1 5 6.82 2.75-.72 5-3.67 5-6.82V8.75L12 6z" fill="#0a2d6e"/>
+                        <text x="12" y="14" text-anchor="middle" font-size="5" font-weight="bold" fill="rgba(255,255,255,0.9)" font-family="serif">U</text>
+                    </svg>
+                </div>
+                <div class="logo-ring-pulse"></div>
             </div>
         </div>
 
-        <h1 class="login-title">Reservas UFOPA</h1>
-        <p class="login-subtitle">Campus Oriximiná — Acesso Institucional</p>
+        <h1 class="login-title">
+            <span class="title-word" style="--d:0">Reservas</span>
+            <span class="title-word ufopa-accent" style="--d:1">UFOPA</span>
+        </h1>
+        <p class="login-subtitle">
+            <span class="subtitle-dot"></span>
+            Campus Oriximiná — Acesso Institucional
+        </p>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                <div class="flash flash-{{ category }}" style="text-align:left; margin-bottom:16px;">
+                <div class="flash flash-{{ category }} flash-login" style="text-align:left; margin-bottom:16px;">
                     <span class="flash-icon">{% if category == 'sucesso' %}✅{% else %}⚠️{% endif %}</span>
                     {{ message }}
                 </div>
@@ -44,32 +68,107 @@
             {% endif %}
         {% endwith %}
 
-        <form action="{{ url_for('auth') }}" method="POST" autocomplete="on">
-            <div class="input-group">
-                <label for="user">Usuário SIGAA</label>
-                <input type="text" name="user" id="user"
-                       placeholder="nome.sobrenome"
-                       autocomplete="username"
-                       required autofocus>
+        <form action="{{ url_for('auth') }}" method="POST" autocomplete="on" id="formLogin" novalidate>
+
+            <!-- Campo: Usuário -->
+            <div class="field-wrapper" id="fw-user">
+                <div class="field-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <div class="field-inner">
+                    <input
+                        type="text"
+                        name="user"
+                        id="user"
+                        class="field-input"
+                        placeholder=" "
+                        autocomplete="username"
+                        required autofocus>
+                    <label for="user" class="field-label">Usuário SIGAA</label>
+                    <span class="field-hint">nome.sobrenome</span>
+                </div>
+                <div class="field-check" id="check-user" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label for="password">Senha</label>
-                <input type="password" name="password" id="password"
-                       placeholder="••••••••"
-                       autocomplete="current-password"
-                       required>
+            <!-- Campo: Senha -->
+            <div class="field-wrapper" id="fw-pass">
+                <div class="field-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <div class="field-inner">
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        class="field-input"
+                        placeholder=" "
+                        autocomplete="current-password"
+                        required>
+                    <label for="password" class="field-label">Senha</label>
+                </div>
+                <!-- Botão ver/ocultar senha -->
+                <button type="button" class="btn-eye" id="btnEye" aria-label="Mostrar senha" title="Mostrar/ocultar senha">
+                    <svg class="eye-icon eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <svg class="eye-icon eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                </button>
+                <!-- Indicador Caps Lock -->
+                <div class="caps-warning" id="capsWarning" aria-live="polite">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 19h20L12 2zm0 3l7.5 13h-15L12 5zm-1 5v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
+                    CAPS LOCK
+                </div>
             </div>
 
-            <button type="submit" class="btn-confirmar">Entrar no Sistema</button>
+            <!-- Força da senha (animada) -->
+            <div class="strength-bar-wrap" id="strengthWrap" aria-hidden="true">
+                <div class="strength-bar">
+                    <div class="strength-fill" id="strengthFill"></div>
+                </div>
+                <span class="strength-label" id="strengthLabel"></span>
+            </div>
+
+            <button type="submit" class="btn-entrar" id="btnEntrar">
+                <span class="btn-text">Entrar no Sistema</span>
+                <span class="btn-loader" aria-hidden="true">
+                    <svg class="spinner-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    Autenticando...
+                </span>
+                <span class="btn-arrow" aria-hidden="true">→</span>
+            </button>
+
         </form>
 
-        <hr class="login-divider">
-        <p class="login-nota">
-            Use as mesmas credenciais do <strong>Portal SIGAA da UFOPA</strong>.<br>
-            O sistema não armazena sua senha.
-        </p>
+        <div class="login-divider">
+            <span>acesso seguro</span>
+        </div>
+
+        <div class="login-footer-info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Use as credenciais do <strong>Portal SIGAA da UFOPA</strong>. O sistema não armazena sua senha.
+        </div>
+
     </div>
 
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </body>
 </html>
