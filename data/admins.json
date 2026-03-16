@@ -1,0 +1,14 @@
+{
+  "admins": [
+    {
+      "login": "admin.ufopa",
+      "nome": "Administrador UFOPA",
+      "ativo": true
+    },
+    {
+      "login": "felipe.picanco",
+      "nome": "Felipe Monteiro",
+      "ativo": true
+    }
+  ]
+}

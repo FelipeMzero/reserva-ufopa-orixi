@@ -1,0 +1,14 @@
+{
+  "operadores": [
+    {
+      "login": "felipe.picanco",
+      "nome": "João Silva",
+      "ativo": true
+    },
+    {
+      "login": "maria.oliveira",
+      "nome": "Maria Oliveira",
+      "ativo": true
+    }
+  ]
+}

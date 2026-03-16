@@ -499,8 +499,8 @@ button, a, [role="button"], select, label[for] {
         background var(--transition),
         transform var(--transition);
     outline: none;
-    appearance: none;
     -webkit-appearance: none;
+    appearance: none;
 }
 
 .input-group input[type="text"]:hover,
@@ -707,8 +707,8 @@ button, a, [role="button"], select, label[for] {
     background: #fafbfd;
     outline: none;
     transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
-    appearance: none;
     -webkit-appearance: none;
+    appearance: none;
 }
 
 .filtro-mes input[type="month"]:focus {
@@ -1199,8 +1199,8 @@ tr.linha-executando:hover {
 
 .login-card {
     background: rgba(255,255,255,.97);
-    backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
     border-radius: 22px;
     padding: 44px 40px 38px;
     width: 100%;

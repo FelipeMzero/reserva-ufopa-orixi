@@ -1,0 +1,100 @@
+{
+  "locais": [
+    {
+      "id": "lab-info",
+      "nome": "Lab. de Informática",
+      "categoria": "Laboratórios",
+      "capacidade": 30,
+      "descricao": "Laboratório com 30 computadores e projetor",
+      "ativo": true
+    },
+    {
+      "id": "lab-multi",
+      "nome": "Lab. Multidisciplinar",
+      "categoria": "Laboratórios",
+      "capacidade": 25,
+      "descricao": "Laboratório de uso geral com bancadas",
+      "ativo": true
+    },
+    {
+      "id": "sala-00",
+      "nome": "Sala 00 Tela Interativa",
+      "categoria": "Salas de Aula",
+      "capacidade": 40,
+      "descricao": "Sala com tela interativa e ar-condicionado",
+      "ativo": true
+    },
+    {
+      "id": "sala-01",
+      "nome": "Sala 01",
+      "categoria": "Salas de Aula",
+      "capacidade": 40,
+      "descricao": "Sala de aula padrão",
+      "ativo": true
+    },
+    {
+      "id": "sala-02",
+      "nome": "Sala 02",
+      "categoria": "Salas de Aula",
+      "capacidade": 40,
+      "descricao": "Sala de aula padrão",
+      "ativo": true
+    },
+    {
+      "id": "sala-03",
+      "nome": "Sala 03",
+      "categoria": "Salas de Aula",
+      "capacidade": 40,
+      "descricao": "Sala de aula padrão",
+      "ativo": true
+    },
+    {
+      "id": "sala-04",
+      "nome": "Sala 04",
+      "categoria": "Salas de Aula",
+      "capacidade": 40,
+      "descricao": "Sala de aula padrão",
+      "ativo": true
+    },
+    {
+      "id": "auditorio",
+      "nome": "Auditório",
+      "categoria": "Espaços Comuns",
+      "capacidade": 120,
+      "descricao": "Auditório principal com palco e sistema de som",
+      "ativo": true
+    },
+    {
+      "id": "bosque",
+      "nome": "Bosque Qualy Gonçalves",
+      "categoria": "Espaços Comuns",
+      "capacidade": 80,
+      "descricao": "Área verde para eventos ao ar livre",
+      "ativo": true
+    },
+    {
+      "id": "quadra",
+      "nome": "Quadra de Areia",
+      "categoria": "Espaços Comuns",
+      "capacidade": 20,
+      "descricao": "Quadra poliesportiva de areia",
+      "ativo": true
+    },
+    {
+      "id": "veiculo-l200",
+      "nome": "Veículo L200",
+      "categoria": "Frota",
+      "capacidade": 5,
+      "descricao": "Caminhonete L200 para atividades de campo",
+      "ativo": true
+    },
+    {
+      "id": "veiculo-van",
+      "nome": "Veículo Van",
+      "categoria": "Frota",
+      "capacidade": 15,
+      "descricao": "Van para transporte de grupos",
+      "ativo": true
+    }
+  ]
+}

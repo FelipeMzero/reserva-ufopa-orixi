@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin — UFOPA Oriximiná</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <style>
+        :root{
+            --azul:#0a2d6e;--azul-deep:#071e47;--azul-light:#2463eb;
+            --azul-glow:rgba(10,45,110,.18);--azul-faint:rgba(10,45,110,.05);
+            --ouro:#e5a800;--ouro-light:#ffc929;
+            --bg:#eef2f9;--bg-card:#ffffff;
+            --sidebar-bg:linear-gradient(175deg,#071e47 0%,#0a2d6e 100%);
+            --text:#0f1f3d;--text-muted:#4a5568;--text-light:#8a94a6;
+            --border:rgba(10,45,110,.10);--border-s:rgba(10,45,110,.22);
+            --shadow-sm:0 2px 8px rgba(10,45,110,.07);
+            --shadow-md:0 6px 24px rgba(10,45,110,.11);
+            --shadow-lg:0 16px 48px rgba(10,45,110,.15);
+            --radius-sm:8px;--radius-md:14px;--radius-lg:20px;
+            --ease:cubic-bezier(.4,0,.2,1);--t:all .28s cubic-bezier(.4,0,.2,1);
+            --sidebar-w:260px;--emerald:#059669;--amber:#d97706;
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--azul-light);border-radius:99px}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);
+            background-image:radial-gradient(ellipse 900px 600px at 100% 0%,rgba(10,45,110,.06) 0%,transparent 60%);
+            background-attachment:fixed;min-height:100vh}
+        /* SIDEBAR */
+        .sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+            background:var(--sidebar-bg);display:flex;flex-direction:column;
+            padding:1.5rem 1rem;z-index:200;overflow-y:auto;
+            transition:transform .3s var(--ease);box-shadow:4px 0 24px rgba(7,30,71,.22)}
+        .sidebar-brand{display:flex;align-items:center;gap:11px;padding:.25rem .5rem 1.5rem;
+            border-bottom:1px solid rgba(255,255,255,.10);margin-bottom:1.25rem}
+        .brand-icon{width:40px;height:40px;background:rgba(255,255,255,.15);
+            border:1.5px solid rgba(255,255,255,.22);border-radius:var(--radius-sm);
+            display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+        .brand-icon img{width:32px;height:32px;object-fit:contain}
+        .brand-name{font-family:'Outfit',sans-serif;font-weight:800;font-size:.9rem;color:white;line-height:1.2}
+        .brand-sub{font-size:.68rem;color:rgba(255,255,255,.55)}
+        .user-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+            border-radius:var(--radius-md);padding:.65rem .9rem;margin-bottom:1.5rem}
+        .user-chip-label{font-size:.6rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.5)}
+        .user-chip-name{font-size:.86rem;font-weight:500;color:rgba(255,255,255,.92);margin-top:2px}
+        .user-chip-badge{display:inline-block;margin-top:5px;padding:2px 8px;border-radius:99px;
+            font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+            background:rgba(229,168,0,.25);color:var(--ouro-light)}
+        .nav-section{font-family:'Outfit',sans-serif;font-size:.6rem;font-weight:700;
+            letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.38);padding:0 .5rem;margin:.25rem 0 .5rem}
+        .nav-item{display:flex;align-items:center;gap:9px;padding:.6rem .75rem;
+            border-radius:var(--radius-sm);color:rgba(255,255,255,.72);font-size:.86rem;
+            font-weight:500;cursor:pointer;border:none;background:none;width:100%;
+            text-decoration:none;transition:var(--t)}
+        .nav-item i{font-size:1rem;flex-shrink:0}
+        .nav-item:hover,.nav-item.active{background:rgba(255,255,255,.14);color:white}
+        .nav-item.active{background:rgba(255,255,255,.18);font-weight:600}
+        .nav-divider{border:none;border-top:1px solid rgba(255,255,255,.1);margin:.75rem 0}
+        .nav-item.danger:hover{background:rgba(220,38,38,.18);color:#fca5a5}
+        /* TOPBAR */
+        .topbar{display:none;position:fixed;top:0;left:0;right:0;height:56px;background:var(--azul);
+            align-items:center;padding:0 1rem;z-index:300;gap:10px;box-shadow:0 2px 12px rgba(7,30,71,.25)}
+        .topbar-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1.5px solid rgba(255,255,255,.25);
+            background:transparent;color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem}
+        .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(7,30,71,.45);z-index:199;opacity:0;transition:opacity .3s}
+        .sidebar-overlay.visible{opacity:1}
+        /* MAIN */
+        .main{margin-left:var(--sidebar-w);min-height:100vh;padding:2.25rem 2rem}
+        .page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.75rem;gap:1rem;flex-wrap:wrap}
+        .page-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.65rem;color:var(--text);line-height:1.2}
+        .page-title span{color:var(--azul)}
+        .clock-pill{background:var(--bg-card);border:1px solid var(--border);border-radius:99px;padding:.45rem 1rem;
+            font-size:.82rem;color:var(--text-muted);display:flex;align-items:center;gap:7px;box-shadow:var(--shadow-sm)}
+        .clock-pill i{color:var(--azul)}
+        /* SECTION LABEL */
+        .section-label{display:flex;align-items:center;gap:10px;font-family:'Outfit',sans-serif;font-weight:700;
+            font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px}
+        .section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+        .section-label i{color:var(--azul);font-size:.78rem}
+        /* FLASH */
+        .flash-wrap{margin-bottom:1.25rem}
+        .flash-msg{display:flex;align-items:flex-start;gap:9px;padding:.7rem 1rem;border-radius:var(--radius-md);
+            font-size:.84rem;margin-bottom:.5rem;animation:fadeUp .3s var(--ease) both}
+        .flash-success{background:rgba(5,150,105,.09);border:1px solid rgba(5,150,105,.25);color:#065f46}
+        .flash-danger{background:rgba(10,45,110,.08);border:1px solid var(--border-s);color:var(--azul)}
+        /* STATS */
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem}
+        .stat-card{background:var(--bg-card);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;
+            border:1px solid var(--border);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:14px;
+            transition:var(--t);animation:fadeUp .5s var(--ease) both;position:relative;overflow:hidden}
+        .stat-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--azul)}
+        .stat-card:nth-child(2)::before{background:var(--emerald)}
+        .stat-card:nth-child(3)::before{background:var(--amber)}
+        .stat-card:nth-child(4)::before{background:var(--azul-light)}
+        .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+        .stat-icon{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;
+            font-size:1.15rem;flex-shrink:0;background:var(--azul-faint);color:var(--azul)}
+        .stat-card:nth-child(2) .stat-icon{background:rgba(5,150,105,.08);color:var(--emerald)}
+        .stat-card:nth-child(3) .stat-icon{background:rgba(217,119,6,.08);color:var(--amber)}
+        .stat-card:nth-child(4) .stat-icon{background:rgba(36,99,235,.08);color:var(--azul-light)}
+        .stat-value{font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:800;color:var(--text);line-height:1}
+        .stat-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-top:2px}
+        /* CHARTS */
+        .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.75rem}
+        .card-box{background:var(--bg-card);border-radius:var(--radius-lg);border:1px solid var(--border);
+            box-shadow:var(--shadow-sm);overflow:hidden;transition:var(--t)}
+        .card-box:hover{box-shadow:var(--shadow-md)}
+        .card-head{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+        .card-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:.88rem;color:var(--text)}
+        .card-body{padding:1.25rem}
+        .chart-wrap{height:180px;position:relative}
+        /* TABS */
+        .admin-tabs{display:flex;gap:4px;background:var(--bg-card);border:1px solid var(--border);
+            border-radius:var(--radius-md);padding:4px;width:fit-content;margin-bottom:1.25rem;box-shadow:var(--shadow-sm)}
+        .atab{padding:.42rem 1.1rem;border:none;border-radius:var(--radius-sm);background:transparent;
+            color:var(--text-muted);font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;
+            cursor:pointer;transition:var(--t);display:flex;align-items:center;gap:6px}
+        .atab.active{background:var(--azul);color:white;box-shadow:0 2px 8px var(--azul-glow)}
+        .atab:not(.active):hover{background:var(--azul-faint);color:var(--azul)}
+        .tab-panel{display:none}.tab-panel.active{display:block}
+        /* TABLE */
+        .tbl-scroll{overflow-x:auto}
+        .tbl{width:100%;border-collapse:collapse}
+        .tbl th{font-family:'Outfit',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;
+            text-transform:uppercase;color:var(--text-muted);padding:.65rem 1.1rem;
+            border-bottom:1px solid var(--border);text-align:left;background:var(--bg)}
+        .tbl td{padding:.85rem 1.1rem;border-bottom:1px solid var(--border);vertical-align:middle;
+            font-size:.86rem;color:var(--text-muted);transition:background .2s}
+        .tbl tbody tr:last-child td{border-bottom:none}
+        .tbl tbody tr:hover td{background:var(--azul-faint)}
+        .cell-main{font-weight:600;color:var(--text);font-size:.88rem}
+        .cell-sub{font-size:.75rem;color:var(--text-muted);margin-top:2px}
+        /* BADGES */
+        .badge-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;
+            font-family:'Outfit',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+        .badge-executando{background:rgba(10,45,110,.1);color:var(--azul);border:1px solid var(--border-s)}
+        .badge-agendada{background:rgba(36,99,235,.08);color:var(--azul-light);border:1px solid rgba(36,99,235,.2)}
+        .badge-realizada{background:rgba(10,45,110,.04);color:var(--text-light);border:1px solid var(--border)}
+        .badge-ativo{background:rgba(5,150,105,.1);color:var(--emerald);border:1px solid rgba(5,150,105,.25)}
+        .badge-inativo{background:rgba(220,38,38,.08);color:#dc2626;border:1px solid rgba(220,38,38,.2)}
+        .badge-admin{background:rgba(229,168,0,.15);color:var(--ouro);border:1px solid rgba(229,168,0,.3)}
+        @keyframes pdot{0%,100%{opacity:1}50%{opacity:.3}}
+        .pulse-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pdot 1.2s infinite}
+        .time-chip{font-size:.82rem;color:var(--text-muted);font-weight:500;display:flex;align-items:center;gap:5px}
+        .time-chip i{color:var(--azul);font-size:.75rem}
+        /* ACTION BUTTONS */
+        .action-btn{width:30px;height:30px;border-radius:var(--radius-sm);border:1px solid var(--border);
+            background:transparent;color:var(--text-muted);display:inline-flex;align-items:center;
+            justify-content:center;cursor:pointer;transition:var(--t);font-size:.8rem;text-decoration:none}
+        .action-btn.edit:hover{background:var(--azul-faint);border-color:var(--border-s);color:var(--azul)}
+        .action-btn.del:hover{background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.25);color:#dc2626}
+        .action-btn.toggle:hover{background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.25);color:var(--emerald)}
+        /* FORMS */
+        .field-wrap{margin-bottom:.875rem}
+        .field-label{font-family:'Outfit',sans-serif;font-size:.67rem;font-weight:700;letter-spacing:.11em;
+            text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:.35rem}
+        .field-input,.field-select{width:100%;padding:.6rem .85rem;border:1.5px solid var(--border);
+            border-radius:var(--radius-md);font-family:'DM Sans',sans-serif;font-size:.87rem;
+            color:var(--text);background:var(--bg);outline:none;transition:var(--t)}
+        .field-input:focus,.field-select:focus{border-color:var(--azul);background:white;box-shadow:0 0 0 4px var(--azul-glow)}
+        .row-2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+        .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+        .btn-primary{padding:.65rem 1.25rem;background:linear-gradient(135deg,var(--azul-deep),var(--azul));
+            border:none;border-radius:var(--radius-md);color:white;font-family:'Outfit',sans-serif;
+            font-weight:700;font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;
+            cursor:pointer;transition:var(--t);display:inline-flex;align-items:center;gap:7px;
+            box-shadow:0 4px 14px var(--azul-glow)}
+        .btn-primary:hover{transform:translateY(-1px);filter:brightness(1.08)}
+        .btn-sm{padding:.45rem .9rem;font-size:.76rem}
+        /* SEARCH */
+        .srch-wrap{position:relative;margin-bottom:1rem}
+        .srch-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:.85rem;pointer-events:none}
+        .srch-wrap input{padding-left:2.2rem}
+        /* EXPORT BAR */
+        .export-bar{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
+            background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);
+            padding:1rem 1.25rem;margin-bottom:1.25rem;box-shadow:var(--shadow-sm)}
+        .export-bar input{flex:1;min-width:200px}
+        .btn-export{padding:.6rem 1.1rem;background:var(--emerald);border:none;border-radius:var(--radius-md);
+            color:white;font-family:'Outfit',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.04em;
+            cursor:pointer;transition:var(--t);display:inline-flex;align-items:center;gap:7px}
+        .btn-export:hover{filter:brightness(1.08)}
+        /* EMPTY */
+        .empty-state{text-align:center;padding:2.5rem;color:var(--text-light)}
+        .empty-state i{font-size:2rem;display:block;margin-bottom:.5rem;opacity:.2}
+        /* MODAL-LIKE FORM SECTION */
+        .form-section{background:var(--azul-faint);border:1px solid var(--border);
+            border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.25rem}
+        .form-section-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:.82rem;
+            color:var(--azul);margin-bottom:1rem;display:flex;align-items:center;gap:7px}
+        /* ANIM */
+        @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+        /* RESPONSIVE */
+        @media(max-width:1024px){.stats-grid{grid-template-columns:1fr 1fr}.charts-row{grid-template-columns:1fr}}
+        @media(max-width:768px){
+            .sidebar{transform:translateX(calc(-1 * var(--sidebar-w)))}
+            .sidebar.open{transform:translateX(0);box-shadow:var(--shadow-lg)}
+            .main{margin-left:0;padding:5rem 1rem 2rem}
+            .topbar{display:flex}.sidebar-overlay{display:block}.clock-pill{display:none}
+        }
+        @media(max-width:520px){.stats-grid{grid-template-columns:1fr 1fr}.row-3{grid-template-columns:1fr}}
+        /* DARK */
+        body.dark{--bg:#0f1f3d;--bg-card:#162240;--text:#eef2f9;--text-muted:#8a9cc0;
+            --border:rgba(36,99,235,.18);--border-s:rgba(36,99,235,.3)}
+        body.dark .tbl th{background:#162240}
+        body.dark .field-input,body.dark .field-select{background:#0f1f3d;color:#eef2f9}
+        body.dark input::-webkit-calendar-picker-indicator{filter:invert(1)}
+    </style>
+</head>
+<body>
+
+<!-- Topbar Mobile -->
+<div class="topbar">
+    <button class="topbar-btn" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
+    <span style="font-family:'Outfit',sans-serif;font-weight:800;font-size:.9rem;color:white">Admin — UFOPA</span>
+    <span style="margin-left:auto;font-size:.8rem;color:rgba(255,255,255,.75)" id="clock-m"></span>
+</div>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="UFOPA"
+                 onerror="this.parentElement.innerHTML='<i class=\'bi bi-shield-fill\' style=\'color:white;font-size:1.2rem\'></i>'">
+        </div>
+        <div>
+            <div class="brand-name">Reservas UFOPA</div>
+            <div class="brand-sub">Painel Administrativo</div>
+        </div>
+    </div>
+    <div class="user-chip">
+        <div class="user-chip-label">Administrador</div>
+        <div class="user-chip-name">{{ nome }}</div>
+        <span class="user-chip-badge">Admin</span>
+    </div>
+    <div class="nav-section">Navegação</div>
+    <nav style="display:flex;flex-direction:column;gap:2px">
+        <button class="nav-item active" onclick="showTab('reservas')">
+            <i class="bi bi-calendar-check"></i> Reservas
+        </button>
+        <button class="nav-item" onclick="showTab('graficos')">
+            <i class="bi bi-bar-chart-fill"></i> Gráficos
+        </button>
+        <button class="nav-item" onclick="showTab('locais')">
+            <i class="bi bi-building"></i> Locais
+        </button>
+        <button class="nav-item" onclick="showTab('usuarios')">
+            <i class="bi bi-people-fill"></i> Usuários
+        </button>
+        <hr class="nav-divider">
+        <a href="{{ url_for('dashboard') }}" class="nav-item">
+            <i class="bi bi-grid-fill"></i> Painel Operador
+        </a>
+        <a href="{{ url_for('quadro') }}" class="nav-item">
+            <i class="bi bi-eye"></i> Quadro Público
+        </a>
+        <button class="nav-item" onclick="toggleDark()">
+            <i id="theme-icon" class="bi bi-moon-stars-fill"></i>
+            <span id="theme-lbl">Modo Escuro</span>
+        </button>
+    </nav>
+    <hr class="nav-divider" style="margin-top:auto">
+    <a href="{{ url_for('logout') }}" class="nav-item danger">
+        <i class="bi bi-box-arrow-left"></i> Sair
+    </a>
+</aside>
+
+<!-- Main -->
+<main class="main">
+    <div class="page-header">
+        <div>
+            <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:3px" id="greeting">Bom dia 👋</div>
+            <h1 class="page-title">Painel <span>Administrativo</span></h1>
+        </div>
+        <div class="clock-pill"><i class="bi bi-clock"></i><span id="clock"></span></div>
+    </div>
+
+    <!-- Flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-wrap">
+        {% for cat, msg in messages %}
+        <div class="flash-msg {{ 'flash-success' if cat == 'sucesso' else 'flash-danger' }}">
+            <i class="bi {{ 'bi-check-circle-fill' if cat == 'sucesso' else 'bi-exclamation-triangle-fill' }}"></i>
+            {{ msg }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Stats sempre visíveis -->
+    <div class="stats-grid">
+        <div class="stat-card" style="animation-delay:.0s">
+            <div class="stat-icon"><i class="bi bi-calendar-check"></i></div>
+            <div><div class="stat-value">{{ stats.total }}</div><div class="stat-label">Total</div></div>
+        </div>
+        <div class="stat-card" style="animation-delay:.05s">
+            <div class="stat-icon"><i class="bi bi-calendar-day"></i></div>
+            <div><div class="stat-value">{{ stats.hoje }}</div><div class="stat-label">Hoje</div></div>
+        </div>
+        <div class="stat-card" style="animation-delay:.1s">
+            <div class="stat-icon"><i class="bi bi-calendar-week"></i></div>
+            <div><div class="stat-value">{{ stats.agendadas }}</div><div class="stat-label">Agendadas</div></div>
+        </div>
+        <div class="stat-card" style="animation-delay:.15s">
+            <div class="stat-icon"><i class="bi bi-check2-all"></i></div>
+            <div><div class="stat-value">{{ stats.realizadas }}</div><div class="stat-label">Realizadas</div></div>
+        </div>
+    </div>
+
+    <!-- Admin Tabs -->
+    <div class="admin-tabs">
+        <button class="atab active" id="atab-reservas" onclick="showTab('reservas')">
+            <i class="bi bi-table"></i> Reservas
+        </button>
+        <button class="atab" id="atab-graficos" onclick="showTab('graficos')">
+            <i class="bi bi-bar-chart-fill"></i> Gráficos
+        </button>
+        <button class="atab" id="atab-locais" onclick="showTab('locais')">
+            <i class="bi bi-building"></i> Locais
+        </button>
+        <button class="atab" id="atab-usuarios" onclick="showTab('usuarios')">
+            <i class="bi bi-people-fill"></i> Usuários
+        </button>
+    </div>
+
+    <!-- ═══ TAB: RESERVAS ═══ -->
+    <div class="tab-panel active" id="panel-reservas">
+        <div class="section-label"><i class="bi bi-search"></i> Auditoria & Exportação</div>
+
+        <!-- Export bar -->
+        <form class="export-bar" action="{{ url_for('admin_exportar') }}" method="GET" target="_blank">
+            <div class="srch-wrap" style="flex:1;margin-bottom:0">
+                <i class="bi bi-search srch-icon"></i>
+                <input type="text" name="q" id="logSearch" class="field-input"
+                    placeholder="Filtrar logs por usuário, local ou atividade…"
+                    style="padding:.6rem .85rem .6rem 2.2rem"
+                    oninput="filterLogs()">
+            </div>
+            <button type="submit" class="btn-export">
+                <i class="bi bi-download"></i> Exportar CSV
+            </button>
+        </form>
+
+        <div class="card-box">
+            <div class="card-head">
+                <span class="card-title"><i class="bi bi-clock-history" style="color:var(--azul);margin-right:7px"></i>Log de Reservas</span>
+                <span style="font-size:.75rem;color:var(--text-muted)" id="logCount">{{ reservas|length }} registro(s)</span>
+            </div>
+            <div class="tbl-scroll">
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Responsável</th>
+                            <th>Atividade</th>
+                            <th>Local</th>
+                            <th>Período</th>
+                            <th>Status</th>
+                            <th style="text-align:center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logBody">
+                    {% if reservas %}
+                        {% for res in reservas %}
+                        <tr class="log-row"
+                            data-search="{{ res.aula|lower }} {{ res.sala|lower }} {{ res.usuario|lower }}">
+                            <td>
+                                <div class="cell-main">{{ res.data[8:10] }}/{{ res.data[5:7] }}/{{ res.data[0:4] }}</div>
+                                {% if res.ts_criacao %}
+                                <div class="cell-sub">Criado: {{ res.ts_criacao }}</div>
+                                {% endif %}
+                            </td>
+                            <td><div class="cell-main">{{ res.usuario }}</div></td>
+                            <td><div class="cell-main">{{ res.aula }}</div></td>
+                            <td><div style="font-size:.84rem;color:var(--text)">{{ res.sala }}</div></td>
+                            <td>
+                                <div class="time-chip">
+                                    <i class="bi bi-clock"></i>{{ res.hora_inicio }} – {{ res.hora_fim }}
+                                </div>
+                            </td>
+                            <td>
+                                {% if res.status == 'Executando' %}
+                                    <span class="badge-pill badge-executando">
+                                        <span class="pulse-dot"></span> Em curso
+                                    </span>
+                                {% elif res.status == 'Agendada' %}
+                                    <span class="badge-pill badge-agendada">Agendada</span>
+                                {% else %}
+                                    <span class="badge-pill badge-realizada">Realizada</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align:center">
+                                <div style="display:flex;gap:5px;justify-content:center">
+                                    <a href="{{ url_for('editar', res_id=res.id) }}"
+                                       class="action-btn edit" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{{ url_for('excluir', res_id=res.id) }}"
+                                       class="action-btn del" title="Excluir"
+                                       onclick="return confirm('Excluir esta reserva?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="7"><div class="empty-state">
+                            <i class="bi bi-inbox"></i>Nenhuma reserva cadastrada.
+                        </div></td></tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ TAB: GRÁFICOS ═══ -->
+    <div class="tab-panel" id="panel-graficos">
+        <div class="section-label"><i class="bi bi-bar-chart-fill"></i> Análise de Dados</div>
+        <div class="charts-row">
+            <div class="card-box">
+                <div class="card-head"><span class="card-title"><i class="bi bi-bar-chart me-2" style="color:var(--azul)"></i>Reservas por Local</span></div>
+                <div class="card-body"><div class="chart-wrap"><canvas id="chartSala"></canvas></div></div>
+            </div>
+            <div class="card-box">
+                <div class="card-head"><span class="card-title"><i class="bi bi-pie-chart me-2" style="color:var(--azul)"></i>Status das Reservas</span></div>
+                <div class="card-body"><div class="chart-wrap"><canvas id="chartStatus"></canvas></div></div>
+            </div>
+        </div>
+        <div class="charts-row">
+            <div class="card-box">
+                <div class="card-head"><span class="card-title"><i class="bi bi-graph-up me-2" style="color:var(--azul)"></i>Reservas por Mês</span></div>
+                <div class="card-body"><div class="chart-wrap" style="height:200px"><canvas id="chartMes"></canvas></div></div>
+            </div>
+            <div class="card-box">
+                <div class="card-head"><span class="card-title"><i class="bi bi-person-lines-fill me-2" style="color:var(--azul)"></i>Reservas por Usuário</span></div>
+                <div class="card-body"><div class="chart-wrap" style="height:200px"><canvas id="chartUser"></canvas></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ TAB: LOCAIS ═══ -->
+    <div class="tab-panel" id="panel-locais">
+        <div class="section-label"><i class="bi bi-building"></i> Gerenciar Locais & Frota</div>
+
+        <!-- Form adicionar local -->
+        <div class="form-section">
+            <div class="form-section-title"><i class="bi bi-plus-circle-fill"></i> Adicionar Novo Local</div>
+            <form action="{{ url_for('admin_local_adicionar') }}" method="POST">
+                <div class="row-3">
+                    <div class="field-wrap">
+                        <label class="field-label">Nome</label>
+                        <input type="text" name="nome" class="field-input" placeholder="Ex: Lab. de Química" required maxlength="80">
+                    </div>
+                    <div class="field-wrap">
+                        <label class="field-label">Categoria</label>
+                        <select name="categoria" class="field-select" required>
+                            <option value="">Selecione…</option>
+                            <option value="Laboratórios">Laboratórios</option>
+                            <option value="Salas de Aula">Salas de Aula</option>
+                            <option value="Espaços Comuns">Espaços Comuns</option>
+                            <option value="Frota">Frota</option>
+                        </select>
+                    </div>
+                    <div class="field-wrap">
+                        <label class="field-label">Capacidade</label>
+                        <input type="number" name="capacidade" class="field-input" placeholder="Ex: 40" min="1">
+                    </div>
+                </div>
+                <div class="row-2">
+                    <div class="field-wrap">
+                        <label class="field-label">ID (slug único)</label>
+                        <input type="text" name="id" class="field-input" placeholder="Ex: lab-quimica">
+                    </div>
+                    <div class="field-wrap">
+                        <label class="field-label">Descrição</label>
+                        <input type="text" name="descricao" class="field-input" placeholder="Descrição breve">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary btn-sm">
+                    <i class="bi bi-plus-circle"></i> Adicionar Local
+                </button>
+            </form>
+        </div>
+
+        <!-- Lista de locais -->
+        <div class="card-box">
+            <div class="card-head">
+                <span class="card-title"><i class="bi bi-list-ul" style="color:var(--azul);margin-right:7px"></i>Locais Cadastrados</span>
+                <span style="font-size:.75rem;color:var(--text-muted)">{{ locais|length }} local(is)</span>
+            </div>
+            <div class="tbl-scroll">
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Capacidade</th>
+                            <th>Descrição</th>
+                            <th>Status</th>
+                            <th style="text-align:center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for l in locais %}
+                    <tr>
+                        <td><div class="cell-main">{{ l.nome }}</div><div class="cell-sub">{{ l.id }}</div></td>
+                        <td>{{ l.categoria }}</td>
+                        <td>{{ l.capacidade }} pessoas</td>
+                        <td><div style="font-size:.8rem;color:var(--text-muted)">{{ l.descricao }}</div></td>
+                        <td>
+                            {% if l.ativo %}
+                                <span class="badge-pill badge-ativo">Ativo</span>
+                            {% else %}
+                                <span class="badge-pill badge-inativo">Inativo</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align:center">
+                            <div style="display:flex;gap:5px;justify-content:center">
+                                <a href="{{ url_for('admin_local_toggle', local_id=l.id) }}"
+                                   class="action-btn toggle" title="{{ 'Desativar' if l.ativo else 'Ativar' }}">
+                                    <i class="bi {{ 'bi-toggle-on' if l.ativo else 'bi-toggle-off' }}"></i>
+                                </a>
+                                <a href="{{ url_for('admin_local_excluir', local_id=l.id) }}"
+                                   class="action-btn del" title="Excluir"
+                                   onclick="return confirm('Excluir o local {{ l.nome }}?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6"><div class="empty-state"><i class="bi bi-building"></i>Nenhum local cadastrado.</div></td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ TAB: USUÁRIOS ═══ -->
+    <div class="tab-panel" id="panel-usuarios">
+        <div class="section-label"><i class="bi bi-people-fill"></i> Gerenciar Operadores & Admins</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start">
+            <!-- Operadores -->
+            <div>
+                <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:.85rem;color:var(--azul);margin-bottom:1rem;display:flex;align-items:center;gap:7px">
+                    <i class="bi bi-person-badge-fill"></i> Operadores
+                </div>
+                <!-- Adicionar operador -->
+                <div class="form-section" style="margin-bottom:1rem">
+                    <div class="form-section-title"><i class="bi bi-person-plus-fill"></i> Adicionar Operador</div>
+                    <form action="{{ url_for('admin_op_adicionar') }}" method="POST">
+                        <div class="field-wrap">
+                            <label class="field-label">Login SIGAA</label>
+                            <input type="text" name="login" class="field-input" placeholder="nome.sobrenome" required>
+                        </div>
+                        <div class="field-wrap">
+                            <label class="field-label">Nome Exibição</label>
+                            <input type="text" name="nome" class="field-input" placeholder="Nome Sobrenome">
+                        </div>
+                        <button type="submit" class="btn-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i> Adicionar
+                        </button>
+                    </form>
+                </div>
+                <div class="card-box">
+                    <div class="tbl-scroll">
+                        <table class="tbl">
+                            <thead><tr><th>Login</th><th>Nome</th><th>Status</th><th style="text-align:center">Ações</th></tr></thead>
+                            <tbody>
+                            {% for op in operadores %}
+                            <tr>
+                                <td><div class="cell-main">{{ op.login }}</div></td>
+                                <td>{{ op.nome or '—' }}</td>
+                                <td>
+                                    {% if op.ativo %}<span class="badge-pill badge-ativo">Ativo</span>
+                                    {% else %}<span class="badge-pill badge-inativo">Inativo</span>{% endif %}
+                                </td>
+                                <td style="text-align:center">
+                                    <div style="display:flex;gap:5px;justify-content:center">
+                                        <a href="{{ url_for('admin_op_toggle', login=op.login) }}"
+                                           class="action-btn toggle" title="Toggle">
+                                            <i class="bi {{ 'bi-toggle-on' if op.ativo else 'bi-toggle-off' }}"></i>
+                                        </a>
+                                        <a href="{{ url_for('admin_op_excluir', login=op.login) }}"
+                                           class="action-btn del" title="Remover"
+                                           onclick="return confirm('Remover operador {{ op.login }}?')">
+                                            <i class="bi bi-person-x"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-person"></i>Nenhum operador.</div></td></tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admins -->
+            <div>
+                <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:.85rem;color:var(--ouro);margin-bottom:1rem;display:flex;align-items:center;gap:7px">
+                    <i class="bi bi-shield-lock-fill"></i> Administradores
+                </div>
+                <div class="card-box">
+                    <div class="card-body" style="padding-bottom:.5rem">
+                        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">
+                            <i class="bi bi-info-circle" style="color:var(--azul)"></i>
+                            Para adicionar admins, edite o arquivo <code>data/admins.json</code> diretamente no servidor.
+                        </p>
+                    </div>
+                    <div class="tbl-scroll">
+                        <table class="tbl">
+                            <thead><tr><th>Login</th><th>Nome</th><th>Papel</th></tr></thead>
+                            <tbody>
+                            {% for adm in admins %}
+                            <tr>
+                                <td><div class="cell-main">{{ adm.login }}</div></td>
+                                <td>{{ adm.nome or '—' }}</td>
+                                <td><span class="badge-pill badge-admin">Admin</span></td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="3"><div class="empty-state"><i class="bi bi-shield"></i>Nenhum admin cadastrado.</div></td></tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Chart data from Jinja -->
+<script>
+const dadosSala   = {{ por_sala | tojson }};
+const dadosStatus = {{ por_status | tojson }};
+const dadosMes    = {{ por_mes | tojson }};
+const dadosUser   = {{ por_usuario | tojson }};
+</script>
+
+<script>
+// ── Clock ──
+function tick(){
+    const d=new Date(),h=d.getHours();
+    const el=document.getElementById('clock');
+    if(el)el.textContent=d.toLocaleTimeString('pt-BR');
+    const m=document.getElementById('clock-m');
+    if(m)m.textContent=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('greeting').textContent=h<12?'Bom dia 👋':h<18?'Boa tarde 👋':'Boa noite 👋';
+}
+setInterval(tick,1000);tick();
+
+// ── Tabs ──
+const panels=['reservas','graficos','locais','usuarios'];
+let chartsInited=false;
+function showTab(t){
+    panels.forEach(p=>{
+        document.getElementById('panel-'+p).classList.toggle('active',p===t);
+        document.getElementById('atab-'+p).classList.toggle('active',p===t);
+        // sync sidebar buttons
+        const btns=document.querySelectorAll('.sidebar .nav-item');
+        btns.forEach(b=>{if(b.textContent.trim().toLowerCase().includes(p))b.classList.toggle('active',p===t)});
+    });
+    if(t==='graficos'&&!chartsInited){initCharts();chartsInited=true;}
+    // Sync hash for direct links
+    if(location.hash==='#'+t)return;
+    history.replaceState(null,'','#'+t);
+}
+// On load check hash
+(function(){const h=location.hash.replace('#','');if(panels.includes(h))showTab(h);})();
+
+// ── Charts ──
+const AZUL='#0a2d6e',AZUL2='#2463eb',OURO='#e5a800',EMERALD='#059669',AMBER='#d97706';
+const PALETTE=[AZUL,AZUL2,'#1145a0','#3b82f6',OURO,EMERALD,AMBER,'#7c3aed','#db2777','#0891b2'];
+
+function initCharts(){
+    // Sala
+    new Chart(document.getElementById('chartSala'),{
+        type:'bar',
+        data:{
+            labels:Object.keys(dadosSala),
+            datasets:[{data:Object.values(dadosSala),backgroundColor:AZUL,borderRadius:5,borderSkipped:false}]
+        },
+        options:{maintainAspectRatio:false,animation:{duration:700},
+            plugins:{legend:{display:false}},
+            scales:{x:{ticks:{color:'#4a5568',font:{size:10,family:'Outfit'}},grid:{display:false}},
+                y:{ticks:{color:'#4a5568',font:{size:10}},grid:{color:'rgba(10,45,110,.06)'}}}}
+    });
+    // Status
+    new Chart(document.getElementById('chartStatus'),{
+        type:'doughnut',
+        data:{
+            labels:Object.keys(dadosStatus),
+            datasets:[{data:Object.values(dadosStatus),
+                backgroundColor:[AZUL,'#e5a800',EMERALD],borderWidth:0,hoverOffset:6}]
+        },
+        options:{maintainAspectRatio:false,cutout:'70%',animation:{duration:700},
+            plugins:{legend:{display:true,position:'bottom',
+                labels:{color:'#4a5568',font:{size:11,family:'Outfit'},boxWidth:10,padding:12}}}}
+    });
+    // Mês
+    new Chart(document.getElementById('chartMes'),{
+        type:'line',
+        data:{
+            labels:Object.keys(dadosMes),
+            datasets:[{data:Object.values(dadosMes),borderColor:AZUL,
+                backgroundColor:'rgba(10,45,110,.08)',tension:.4,fill:true,
+                pointBackgroundColor:AZUL,pointRadius:4}]
+        },
+        options:{maintainAspectRatio:false,animation:{duration:700},
+            plugins:{legend:{display:false}},
+            scales:{x:{ticks:{color:'#4a5568',font:{size:10}},grid:{display:false}},
+                y:{ticks:{color:'#4a5568',font:{size:10}},grid:{color:'rgba(10,45,110,.06)'}}}}
+    });
+    // Usuário
+    const userKeys=Object.keys(dadosUser).slice(0,10);
+    const userVals=userKeys.map(k=>dadosUser[k]);
+    new Chart(document.getElementById('chartUser'),{
+        type:'bar',
+        data:{labels:userKeys,datasets:[{data:userVals,
+            backgroundColor:PALETTE.slice(0,userKeys.length),borderRadius:5,borderSkipped:false}]},
+        options:{indexAxis:'y',maintainAspectRatio:false,animation:{duration:700},
+            plugins:{legend:{display:false}},
+            scales:{x:{ticks:{color:'#4a5568',font:{size:10}},grid:{color:'rgba(10,45,110,.06)'}},
+                y:{ticks:{color:'#4a5568',font:{size:10,family:'Outfit'}},grid:{display:false}}}}
+    });
+}
+
+// ── Log Filter ──
+function filterLogs(){
+    const q=document.getElementById('logSearch').value.toLowerCase();
+    const rows=document.querySelectorAll('.log-row');
+    let v=0;
+    rows.forEach(r=>{
+        const ok=!q||r.dataset.search.includes(q);
+        r.style.display=ok?'':'none';
+        if(ok)v++;
+    });
+    document.getElementById('logCount').textContent=v+' registro(s)';
+}
+
+// ── Sidebar mobile ──
+function toggleSidebar(){
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('visible');
+}
+
+// ── Dark mode ──
+function toggleDark(){
+    const dark=document.body.classList.toggle('dark');
+    document.getElementById('theme-icon').className=dark?'bi bi-sun-fill':'bi bi-moon-stars-fill';
+    document.getElementById('theme-lbl').textContent=dark?'Modo Claro':'Modo Escuro';
+    localStorage.setItem('theme',dark?'dark':'light');
+}
+if(localStorage.getItem('theme')==='dark')toggleDark();
+
+// ── Auto-dismiss flash ──
+document.querySelectorAll('.flash-msg').forEach(f=>{
+    setTimeout(()=>{f.style.transition='opacity .5s';f.style.opacity='0';
+        setTimeout(()=>f.remove(),500);},5000);
+});
+</script>
+</body>
+</html>

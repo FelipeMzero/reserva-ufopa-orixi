@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadro de Ocupação — UFOPA Oriximiná</title>
+    <meta http-equiv="refresh" content="120">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root{
+            --azul:#0a2d6e;--azul-deep:#071e47;--azul-light:#2463eb;
+            --azul-faint:rgba(10,45,110,.05);--azul-glow:rgba(10,45,110,.15);
+            --ouro:#e5a800;--ouro-light:#ffc929;
+            --bg:#eef2f9;--bg-card:#fff;
+            --text:#0f1f3d;--text-muted:#4a5568;--text-light:#8a94a6;
+            --border:rgba(10,45,110,.10);--border-s:rgba(10,45,110,.22);
+            --shadow-sm:0 2px 8px rgba(10,45,110,.07);
+            --shadow-md:0 6px 24px rgba(10,45,110,.11);
+            --radius-sm:8px;--radius-md:14px;--radius-lg:20px;
+            --t:all .28s cubic-bezier(.4,0,.2,1);
+            --emerald:#059669;--amber:#d97706;
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;
+            background-image:radial-gradient(ellipse 800px 500px at 100% 0%,rgba(10,45,110,.06) 0%,transparent 60%)}
+        /* ─ HEADER ─ */
+        header{background:linear-gradient(135deg,var(--azul-deep) 0%,var(--azul) 60%,#1648a8 100%);
+            padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;
+            box-shadow:0 4px 20px rgba(10,45,110,.3);position:sticky;top:0;z-index:100}
+        header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+            background:linear-gradient(90deg,transparent,var(--ouro),var(--ouro-light),var(--ouro),transparent);
+            background-size:200% 100%;animation:goldSweep 4s linear infinite}
+        @keyframes goldSweep{0%{background-position:-100% 0}100%{background-position:200% 0}}
+        .hdr-left{display:flex;align-items:center;gap:12px}
+        .hdr-logo{width:38px;height:38px;border-radius:6px;object-fit:contain;
+            filter:drop-shadow(0 0 6px rgba(255,255,255,.4))}
+        .hdr-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:1rem;color:white}
+        .hdr-sub{font-size:.7rem;color:rgba(255,255,255,.6)}
+        .hdr-right{display:flex;align-items:center;gap:12px}
+        .clock-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+            border-radius:99px;padding:.35rem .9rem;font-size:.8rem;color:rgba(255,255,255,.9);
+            display:flex;align-items:center;gap:6px}
+        .btn-login{background:rgba(229,168,0,.2);border:1.5px solid rgba(229,168,0,.4);
+            border-radius:var(--radius-sm);padding:.38rem .9rem;color:var(--ouro-light);
+            font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:700;
+            text-decoration:none;transition:var(--t)}
+        .btn-login:hover{background:rgba(229,168,0,.35)}
+        /* ─ MAIN ─ */
+        .wrap{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+        .page-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.5rem;
+            color:var(--text);margin-bottom:.25rem}
+        .page-title span{color:var(--azul)}
+        .page-sub{font-size:.84rem;color:var(--text-muted);margin-bottom:1.75rem}
+        /* ─ STATS ─ */
+        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem;margin-bottom:1.75rem}
+        .stat{background:var(--bg-card);border-radius:var(--radius-lg);padding:1rem 1.2rem;
+            border:1px solid var(--border);box-shadow:var(--shadow-sm);
+            display:flex;align-items:center;gap:12px;transition:var(--t);
+            position:relative;overflow:hidden}
+        .stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+        .stat:nth-child(1)::before{background:var(--azul)}
+        .stat:nth-child(2)::before{background:var(--emerald)}
+        .stat:nth-child(3)::before{background:var(--amber)}
+        .stat:nth-child(4)::before{background:var(--azul-light)}
+        .stat-ico{width:40px;height:40px;border-radius:var(--radius-sm);
+            display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+            background:var(--azul-faint);color:var(--azul)}
+        .stat:nth-child(2) .stat-ico{background:rgba(5,150,105,.08);color:var(--emerald)}
+        .stat:nth-child(3) .stat-ico{background:rgba(217,119,6,.08);color:var(--amber)}
+        .stat:nth-child(4) .stat-ico{background:rgba(36,99,235,.08);color:var(--azul-light)}
+        .stat-v{font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800;line-height:1}
+        .stat-l{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;
+            color:var(--text-muted);margin-top:2px}
+        /* ─ FILTERS ─ */
+        .filters{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:1.25rem}
+        .filter-input{padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:var(--radius-md);
+            font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--text);background:var(--bg);
+            outline:none;transition:var(--t)}
+        .filter-input:focus{border-color:var(--azul);background:white;
+            box-shadow:0 0 0 4px var(--azul-glow)}
+        .srch-wrap{position:relative;flex:1;min-width:200px}
+        .srch-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);
+            color:var(--text-light);font-size:.85rem;pointer-events:none}
+        .srch-wrap input{padding-left:2.2rem;width:100%}
+        .btn-clear{padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:var(--radius-md);
+            background:var(--bg);font-size:.78rem;cursor:pointer;color:var(--text-muted);transition:var(--t)}
+        .btn-clear:hover{border-color:var(--border-s);color:var(--text)}
+        /* ─ TABLE ─ */
+        .card-box{background:var(--bg-card);border-radius:var(--radius-lg);
+            border:1px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden}
+        .card-head{padding:1rem 1.25rem;border-bottom:1px solid var(--border);
+            display:flex;align-items:center;justify-content:space-between}
+        .card-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem;color:var(--text)}
+        .tbl-scroll{overflow-x:auto}
+        .tbl{width:100%;border-collapse:collapse}
+        .tbl th{font-family:'Outfit',sans-serif;font-size:.65rem;font-weight:700;
+            letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);
+            padding:.65rem 1.1rem;border-bottom:1px solid var(--border);text-align:left;
+            background:var(--bg)}
+        .tbl td{padding:.9rem 1.1rem;border-bottom:1px solid var(--border);
+            vertical-align:middle;font-size:.86rem;color:var(--text-muted);transition:background .2s}
+        .tbl tbody tr:last-child td{border-bottom:none}
+        .tbl tbody tr:hover td{background:var(--azul-faint)}
+        .cell-main{font-weight:600;color:var(--text);font-size:.88rem}
+        .cell-sub{font-size:.75rem;color:var(--text-muted);margin-top:2px}
+        .badge-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;
+            border-radius:99px;font-family:'Outfit',sans-serif;font-size:.62rem;
+            font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+        .badge-executando{background:rgba(10,45,110,.1);color:var(--azul);border:1px solid var(--border-s)}
+        .badge-hoje{background:rgba(5,150,105,.1);color:var(--emerald);border:1px solid rgba(5,150,105,.25)}
+        .badge-agendada{background:rgba(36,99,235,.08);color:var(--azul-light);border:1px solid rgba(36,99,235,.2)}
+        .badge-realizada{background:rgba(10,45,110,.04);color:var(--text-light);border:1px solid var(--border)}
+        @keyframes pdot{0%,100%{opacity:1}50%{opacity:.3}}
+        .pulse-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pdot 1.2s infinite}
+        .time-chip{font-size:.82rem;color:var(--text-muted);font-weight:500;
+            display:flex;align-items:center;gap:5px;white-space:nowrap}
+        .time-chip i{color:var(--azul);font-size:.75rem}
+        .empty-state{text-align:center;padding:3rem;color:var(--text-light)}
+        .empty-state i{font-size:2.5rem;display:block;margin-bottom:.75rem;opacity:.2}
+        /* ─ FOOTER ─ */
+        footer{text-align:center;padding:2rem;font-size:.78rem;color:var(--text-light)}
+        /* ─ RESPONSIVE ─ */
+        @media(max-width:900px){.stats-row{grid-template-columns:1fr 1fr}}
+        @media(max-width:520px){.stats-row{grid-template-columns:1fr 1fr};.hdr-sub{display:none}}
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="hdr-left">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" class="hdr-logo" alt="UFOPA"
+             onerror="this.style.display='none'">
+        <div>
+            <div class="hdr-title">Reservas UFOPA</div>
+            <div class="hdr-sub">Campus Oriximiná — Quadro Público</div>
+        </div>
+    </div>
+    <div class="hdr-right">
+        <div class="clock-pill"><i class="bi bi-clock"></i><span id="clock"></span></div>
+        {% if nome %}
+            {% if papel == 'admin' %}
+            <a href="{{ url_for('admin') }}" class="btn-login">
+                <i class="bi bi-shield-lock-fill"></i> Admin
+            </a>
+            {% elif papel == 'operador' %}
+            <a href="{{ url_for('dashboard') }}" class="btn-login">
+                <i class="bi bi-grid-fill"></i> Painel
+            </a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="btn-login" style="background:rgba(220,38,38,.15);border-color:rgba(220,38,38,.3);color:#fca5a5">
+                <i class="bi bi-box-arrow-left"></i> Sair
+            </a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="btn-login">
+                <i class="bi bi-box-arrow-in-right"></i> Entrar
+            </a>
+        {% endif %}
+    </div>
+</header>
+
+<div class="wrap">
+    <div class="page-title">Quadro de <span>Ocupação</span></div>
+    <p class="page-sub">Visualize em tempo real a disponibilidade dos espaços e frota do Campus Oriximiná.</p>
+
+    <!-- Stats -->
+    {% set total = reservas|length %}
+    {% set hoje_str = reservas[0].data if reservas else '' %}
+    {% set n_hoje = reservas|selectattr('status','equalto','Agendada')|list|length %}
+    <div class="stats-row">
+        <div class="stat">
+            <div class="stat-ico"><i class="bi bi-calendar-check"></i></div>
+            <div><div class="stat-v">{{ total }}</div><div class="stat-l">Total</div></div>
+        </div>
+        <div class="stat">
+            <div class="stat-ico"><i class="bi bi-record-circle"></i></div>
+            <div>
+                <div class="stat-v">{{ reservas|selectattr('status','equalto','Executando')|list|length }}</div>
+                <div class="stat-l">Em curso</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-ico"><i class="bi bi-calendar-week"></i></div>
+            <div>
+                <div class="stat-v">{{ reservas|selectattr('status','equalto','Agendada')|list|length }}</div>
+                <div class="stat-l">Agendadas</div>
+            </div>
+        </div>
+        <div class="stat">
+            <div class="stat-ico"><i class="bi bi-check2-all"></i></div>
+            <div>
+                <div class="stat-v">{{ reservas|selectattr('status','equalto','Realizada')|list|length }}</div>
+                <div class="stat-l">Realizadas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <div class="srch-wrap">
+            <i class="bi bi-search srch-icon"></i>
+            <input type="text" class="filter-input srch-wrap" id="srch"
+                placeholder="Buscar por atividade, local ou responsável…"
+                style="padding:.55rem .9rem .55rem 2.2rem;width:100%">
+        </div>
+        <input type="month" id="filtroMes" class="filter-input" style="width:auto">
+        <button class="btn-clear" onclick="document.getElementById('filtroMes').value='';applyFilter()">
+            ✕ Limpar
+        </button>
+    </div>
+
+    <!-- Table -->
+    <div class="card-box">
+        <div class="card-head">
+            <span class="card-title"><i class="bi bi-calendar-range" style="color:var(--azul);margin-right:7px"></i>Reservas</span>
+            <span style="font-size:.75rem;color:var(--text-muted)" id="count-lbl">{{ total }} registro(s)</span>
+        </div>
+        <div class="tbl-scroll">
+            <table class="tbl" id="tblRes">
+                <thead>
+                    <tr>
+                        <th>Data / Status</th>
+                        <th>Atividade</th>
+                        <th>Local / Recurso</th>
+                        <th>Período</th>
+                        <th>Responsável</th>
+                    </tr>
+                </thead>
+                <tbody id="tblBody">
+                {% if reservas %}
+                    {% for res in reservas %}
+                    <tr class="res-row"
+                        data-search="{{ res.aula|lower }} {{ res.sala|lower }} {{ res.usuario|lower }}"
+                        data-mes="{{ res.data[:7] }}">
+                        <td>
+                            <div class="cell-main">
+                                {{ res.data[8:10] }}/{{ res.data[5:7] }}/{{ res.data[0:4] }}
+                            </div>
+                            {% if res.status == 'Executando' %}
+                                <span class="badge-pill badge-executando">
+                                    <span class="pulse-dot"></span> Em curso
+                                </span>
+                            {% elif res.status == 'Agendada' %}
+                                <span class="badge-pill badge-agendada">Agendada</span>
+                            {% else %}
+                                <span class="badge-pill badge-realizada">Realizada</span>
+                            {% endif %}
+                        </td>
+                        <td><div class="cell-main">{{ res.aula }}</div></td>
+                        <td><div class="cell-main" style="font-size:.84rem">{{ res.sala }}</div></td>
+                        <td>
+                            <div class="time-chip">
+                                <i class="bi bi-clock"></i>{{ res.hora_inicio }} – {{ res.hora_fim }}
+                            </div>
+                        </td>
+                        <td><div class="cell-sub" style="font-size:.84rem">{{ res.usuario }}</div></td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+                <tr id="msgVazio" style="display:none">
+                    <td colspan="5">
+                        <div class="empty-state">
+                            <i class="bi bi-inbox"></i>Nenhuma reserva encontrada.
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>Sistema de Reservas UFOPA — Campus Oriximiná &nbsp;|&nbsp; Desenvolvido por Felipe Monteiro &nbsp;|&nbsp; Atualiza automaticamente a cada 2 min</p>
+</footer>
+
+<script>
+function tick(){
+    const d=new Date(),h=d.getHours();
+    document.getElementById('clock').textContent=d.toLocaleTimeString('pt-BR');
+}
+setInterval(tick,1000);tick();
+
+const srch=document.getElementById('srch');
+const filtroMes=document.getElementById('filtroMes');
+
+(function(){
+    const d=new Date();
+    filtroMes.value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    applyFilter();
+})();
+
+function applyFilter(){
+    const q=srch.value.toLowerCase();
+    const mes=filtroMes.value;
+    const rows=document.querySelectorAll('.res-row');
+    let v=0;
+    rows.forEach(r=>{
+        const ok=(!q||r.dataset.search.includes(q))&&(!mes||r.dataset.mes===mes);
+        r.style.display=ok?'':'none';
+        if(ok)v++;
+    });
+    document.getElementById('msgVazio').style.display=v===0?'':'none';
+    document.getElementById('count-lbl').textContent=v+' registro(s)';
+}
+srch.addEventListener('input',applyFilter);
+filtroMes.addEventListener('change',applyFilter);
+</script>
+</body>
+</html>

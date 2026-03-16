@@ -1,0 +1,178 @@
+/* ============================================================
+   ADMIN CSS - UFOPA
+   Painel de Administração, Gráficos e Auditoria
+   ============================================================ */
+
+:root {
+    --ufopa-azul:        #0a2d6e;
+    --ufopa-azul-deep:   #061a42;
+    --ufopa-verde:       #008542;
+    --ufopa-verde-light: #00a854;
+    
+    --bg-page:           #f4f6f9;
+    --bg-card:           #ffffff;
+    --sidebar-bg:        #ffffff;
+    
+    --text:              #1e293b;
+    --text-muted:        #64748b;
+    --border:            #e2e8f0;
+    
+    --shadow-sm:         0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md:         0 4px 6px -1px rgba(0,0,0,0.1);
+    --shadow-lg:         0 10px 15px -3px rgba(0,0,0,0.1);
+    
+    --radius-sm:         8px;
+    --radius-md:         12px;
+    --sidebar-w:         260px;
+    --transition:        all 0.3s ease;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background-color: var(--bg-page); color: var(--text); }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: 1.5rem 1rem;
+    z-index: 200;
+}
+
+.sidebar-brand {
+    display: flex; align-items: center; gap: 11px;
+    padding: 0.25rem 0.5rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.25rem;
+}
+
+.brand-icon-sm {
+    width: 40px; height: 40px;
+    background: rgba(0, 133, 66, 0.1);
+    border: 1.5px solid rgba(0, 133, 66, 0.2);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ufopa-verde); font-size: 1.1rem; flex-shrink: 0;
+}
+
+.brand-name { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--ufopa-azul); }
+.brand-sub-sm { font-size: 0.75rem; color: var(--text-muted); }
+
+.user-chip {
+    background: var(--bg-page);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--ufopa-azul);
+}
+.user-chip-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+.user-chip-name  { font-size: 0.9rem; font-weight: 700; color: var(--ufopa-azul); margin-top: 2px; }
+
+.nav-section {
+    font-family: 'Outfit', sans-serif; font-size: 0.65rem; font-weight: 700;
+    text-transform: uppercase; color: var(--text-muted);
+    padding: 0 0.5rem; margin: 0.25rem 0 0.5rem;
+}
+
+.nav-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 0.7rem 1rem; border-radius: var(--radius-sm);
+    color: var(--text-muted); font-size: 0.9rem; font-weight: 500;
+    text-decoration: none; transition: var(--transition);
+}
+.nav-item i { font-size: 1.1rem; }
+.nav-item:hover { background: var(--bg-page); color: var(--ufopa-azul); }
+.nav-item.active { background: rgba(10, 45, 110, 0.08); color: var(--ufopa-azul); font-weight: 700; border-right: 3px solid var(--ufopa-azul); }
+.nav-divider { border: none; border-top: 1px solid var(--border); margin: 0.75rem 0; }
+.nav-item.danger { color: #dc2626; }
+.nav-item.danger:hover { background: #fef2f2; }
+
+/* ─── MAIN CONTENT ─── */
+.main {
+    margin-left: var(--sidebar-w);
+    padding: 2rem 3rem;
+    min-height: 100vh;
+}
+
+.page-header { margin-bottom: 2rem; }
+.page-title {
+    font-family: 'Outfit', sans-serif; font-weight: 800;
+    font-size: 1.8rem; color: var(--text);
+}
+.page-title span { color: var(--ufopa-verde); }
+.greeting-line { font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; }
+
+.section-label {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Outfit', sans-serif; font-weight: 700;
+    font-size: 0.75rem; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 1rem;
+}
+.section-label i { color: var(--ufopa-azul); font-size: 0.9rem; }
+
+/* ─── CARDS E GRÁFICOS ─── */
+.charts-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+}
+
+.card-box {
+    background: var(--bg-card); border-radius: var(--radius-md);
+    border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.card-head {
+    padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+    background: #f8fafc;
+}
+.card-title {
+    font-family: 'Outfit', sans-serif; font-weight: 700;
+    font-size: 0.95rem; color: var(--text);
+}
+.card-body { padding: 1.5rem; }
+.chart-wrap { height: 250px; position: relative; }
+
+/* ─── BOTÃO EXPORTAR ─── */
+.btn-export {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ufopa-verde);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex; align-items: center; gap: 6px;
+}
+.btn-export:hover { background: #f0fdf4; border-color: var(--ufopa-verde); }
+
+/* ─── TABELA DE AUDITORIA ─── */
+.table-scroll { overflow-x: auto; }
+.reserva-table { width: 100%; border-collapse: collapse; text-align: left; }
+.reserva-table th {
+    background: #f8fafc; color: var(--text-muted);
+    font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 700;
+    text-transform: uppercase; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+}
+.reserva-table td {
+    padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+    font-size: 0.85rem; color: var(--text);
+}
+.reserva-table tbody tr:hover td { background: #f1f5f9; }
+
+/* ─── BADGES DE LOGS ─── */
+.badge-log {
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 0.7rem; font-weight: 700; font-family: 'Outfit', sans-serif;
+    display: inline-block; text-transform: uppercase;
+}
+.badge-info      { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+.badge-success   { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
+.badge-danger    { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+.badge-secondary { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+.badge-default   { background: #ffedd5; color: #ea580c; border: 1px solid #fed7aa; }
